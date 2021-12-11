@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import Content from './Content.js'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import Content from './Content.js';
+import Account from './Account.js'
 
 function Index() {
     const [isLogged, setIsLogged] = useState(false);
+    const [openAccounts, setOpenAccounts] = useState(false);
     const [userData, setUserData] = useState();
     const location = useLocation();
+    let navigate = useNavigate();
+
+    const logout = async (ev) => {
+        ev.preventDefault();
+        Swal.fire(
+            'Logging out!',
+            'Thank you for visiting us',
+            'success'
+          )
+        setIsLogged(false);
+        navigate('/');
+    }
+
+    const homeCliked = async (ev) => {
+        ev.preventDefault();
+
+        setOpenAccounts(false);
+    }
+
+    const accountsClicked = async (ev) => {
+        ev.preventDefault();
+
+        setOpenAccounts(true);
+    }
 
     useEffect(() => {
         const loadUser = async () => {
@@ -14,6 +41,7 @@ function Index() {
                     setUserData(location.state.response.data);
                     setIsLogged(true);
                 }
+                
             } catch (e) {
                 console.log(e);
             }
@@ -33,19 +61,24 @@ function Index() {
                             <div className="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <span className="nav-link active" aria-current="page">Home</span>
+                                        <span className="nav-link active" role="button" onClick={homeCliked} aria-current="page">Home</span>
                                     </li>
                                     <li className="nav-item">
-                                        <span className="nav-link">{userData.isAdmin ? ("Accounts") : (" ")}</span>
+                                        <span className="nav-link" role="button" onClick={accountsClicked} >{userData.isAdmin ? ("Accounts") : (" ")}</span>
                                     </li>
-                                    <li className="nav-item">
-                                        <span className="nav-link">Logout</span>
+                                    <li className="nav-item pe-auto">
+                                        <span onClick={logout} role="button" className="nav-link">Logout</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </nav>
-                    <Content />
+                    {openAccounts ? (
+                        <Account userData={userData} />
+                    ):(
+                        <Content />
+                    )}
+                    
                 </div>
             ) : (
                 "Page not Found"

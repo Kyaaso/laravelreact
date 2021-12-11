@@ -3,14 +3,18 @@ import axios from 'axios';
 
 const Content = () => {
     const [data, setData] = useState([]);
-    const [isPressed, setIspressed] = useState(false);
+    const [isPressed, setIsPressed] = useState(false);
+    const [search, setSearch] = useState('');
     var id = 0;
 
-    const enterKeyPressed = (event) => {
-        if (event.key === 'Enter') {
-          isPressed(true);
+
+    const enterKeyPressed = (ev) => {
+        if (ev.key === 'Enter') {
+          setIsPressed(true);
+          console.log(isPressed);
         }
       }
+
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -23,6 +27,7 @@ const Content = () => {
         };
         fetchNews();
     }, []);
+    
     return (
         <div className="container mt-2">
             <div className="row">
@@ -33,33 +38,33 @@ const Content = () => {
                                 <div className="col">
                                     <div className="form">
                                         <i className="fa fa-search"></i>
-                                        <input type="text" className="form-control form-input" onKeyDown={enterKeyPressed} placeholder="Search anything..." />
+                                        <input type="text" className="form-control form-input" name="search" onInput={ev => setSearch(ev.target.value)} value={search} onKeyDown={enterKeyPressed} placeholder="Search anything..." />
                                     </div>
                                     <div className="col d-flex justify-content-center align-items-center mt-4">
                                         <ul className="list-inline">
-                                            <li className="list-inline-item"><h6 className="me-4">Business</h6></li>
-                                            <li className="list-inline-item"><h6 className="me-4">Enterntainment</h6></li>
-                                            <li className="list-inline-item"><h6 className="me-4">General</h6></li>
-                                            <li className="list-inline-item"><h6 className="me-4">Health</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">Business</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">Enterntainment</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">General</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">Health</h6></li>
                                         </ul>
                                     </div>
                                     <div className="col d-flex justify-content-center align-items-center">
                                         <ul className="list-inline">
-                                            <li className="list-inline-item"><h6 className="me-4">Science</h6></li>
-                                            <li className="list-inline-item"><h6 className="me-4">Sports</h6></li>
-                                            <li className="list-inline-item"><h6 className="">Technology</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">Science</h6></li>
+                                            <li className="list-inline-item"><h6 className="me-4" role="button">Sports</h6></li>
+                                            <li className="list-inline-item"><h6 role="button">Technology</h6></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="row mb-5 pb-5 bg-white">
-                            THIS IS THE CONTENT AREA
-                            {/* {
+                            {/* THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT */}
+                            {
                                 data.map((item) => (
                                     <div className="col d-flex justify-content-center pt-2 border-bottom" key={id++}>
                                         <div className="card -0 p-1 mb-2" style={{ width: '18rem' }}>
-                                            <img className="card-img-top -bottom pb-1" style={{ width: '100%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={item.urlToImage} alt="Card image cap" />
+                                            <img className="card-img-top -bottom pb-1" style={{ width: '100%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={item.urlToImage} alt="" />
                                             <div className="card-body">
                                                 <h5 className="card-title"><u>{item.title}</u></h5>
                                                 <p className="card-text">{item.description}</p>
@@ -70,7 +75,7 @@ const Content = () => {
                                         </div>
                                     </div>
                                 ))
-                            } */}
+                            }
                         </div>
                     </div>
                 </div>

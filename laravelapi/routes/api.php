@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/accounts', [UserController::class, 'index']);
 Route::post('/create-account', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
 
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/category/{category}', [NewsController::class, 'category']);

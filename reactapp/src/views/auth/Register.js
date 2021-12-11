@@ -49,14 +49,17 @@ function Login() {
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1"  className="form-label">Fullname</label>
                         <input id="exampleInputEmail1" type="input" name="name" onInput={ev => setName(ev.target.value)} value={name} className="form-control" aria-describedby="emailHelp" />
+                        <span className="text-danger">{errorList.name}</span>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                         <input type="email" name="email" onInput={ev => setEmail(ev.target.value)} value={email} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                        <span className="text-danger">{errorList.email}</span>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1" className="form-label">Password</label>
                         <input id="exampleInputEmail1" type="password" name="password" onInput={ev => setPassword(ev.target.value)} value={password} className="form-control" />
+                        <span className="text-danger">{errorList.password}</span>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1" className="form-label">Repeat Password</label>

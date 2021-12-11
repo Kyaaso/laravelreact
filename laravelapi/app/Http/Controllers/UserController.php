@@ -10,18 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     public function index(){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|confirmed|min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'validate_err' => $validator->messages(),
-            ]);
-        } else {
-            return User::all();
-        }
+        return User::all();
     }
 
     public function store(Request $request)
@@ -49,6 +38,18 @@ class UserController extends Controller
                 'message' => 'Account Successfully Created',
             ]);
         }
+    }
+
+    public function update(){
+        
+    }
+
+    public function destroy($id){
+        User::where('id', $id)->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student Deleted Successfully',
+        ]);
     }
 
     public function login(Request $request)

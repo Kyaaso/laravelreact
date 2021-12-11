@@ -28,6 +28,11 @@ function Login(props) {
         }else if(response.data.status === 422){
             setErrorList(response.data.message);
         }else if(response.data.status === 401){
+            Swal.fire(
+                'Oh no!',
+                response.data.message,
+                'warning'
+              )
             setInvalidCred(response.data.message);
         }
     } 
