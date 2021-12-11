@@ -1,20 +1,53 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 const Content = () => {
     const [data, setData] = useState([]);
-    const [isPressed, setIsPressed] = useState(false);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
+    var tempSearch = "";
     var id = 0;
 
-
-    const enterKeyPressed = (ev) => {
-        if (ev.key === 'Enter') {
-          setIsPressed(true);
-          console.log(isPressed);
+    const enterKeyIsPressed = async (ev, search) => {
+        if (ev.code === "Enter" || ev.code === "NumpadEnter") {
+            ev.preventDefault();
+            
+            let timerInterval
+                Swal.fire({
+                    title: 'Processing!',
+                    html: '<b></b>',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log('I was closed by the timer')
+                    }
+                });
+            if(search === ""){
+                const response = await axios.get('http://127.0.0.1:8000/api/news');
+                setData(response.data.articles);
+            }else{
+                const response = await axios.get(`http://127.0.0.1:8000/api/news/search/${search}`);
+                setData(response.data.articles);
+            }
         }
-      }
+    };
 
+    function myFunction() {
+        tempSearch = document.getElementById("searchBar").value;
+        setSearch(tempSearch);
+    }
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -26,8 +59,11 @@ const Content = () => {
             }
         };
         fetchNews();
+        return () => {
+        };
     }, []);
-    
+
+
     return (
         <div className="container mt-2">
             <div className="row">
@@ -38,7 +74,7 @@ const Content = () => {
                                 <div className="col">
                                     <div className="form">
                                         <i className="fa fa-search"></i>
-                                        <input type="text" className="form-control form-input" name="search" onInput={ev => setSearch(ev.target.value)} value={search} onKeyDown={enterKeyPressed} placeholder="Search anything..." />
+                                        <input type="text" className="form-control form-input" name="search" id="searchBar" onKeyDown={(ev) => enterKeyIsPressed(ev, search)} onInput={myFunction} placeholder="Search anything..." />
                                     </div>
                                     <div className="col d-flex justify-content-center align-items-center mt-4">
                                         <ul className="list-inline">
@@ -59,8 +95,8 @@ const Content = () => {
                             </div>
                         </div>
                         <div className="row mb-5 pb-5 bg-white">
-                            THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT
-                            {/* {
+                            {/* THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT */}
+                            {
                                 data.map((item) => (
                                     <div className="col d-flex justify-content-center pt-2 border-bottom" key={id++}>
                                         <div className="card -0 p-1 mb-2" style={{ width: '18rem' }}>
@@ -75,7 +111,7 @@ const Content = () => {
                                         </div>
                                     </div>
                                 ))
-                            } */}
+                            }
                         </div>
                     </div>
                 </div>
