@@ -17,7 +17,7 @@ function Index() {
             'Logging out!',
             'Thank you for visiting us',
             'success'
-          )
+        )
         setIsLogged(false);
         navigate('/');
     }
@@ -41,7 +41,7 @@ function Index() {
                     setUserData(location.state.response.data);
                     setIsLogged(true);
                 }
-                
+
             } catch (e) {
                 console.log(e);
             }
@@ -61,13 +61,18 @@ function Index() {
                             <div className="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <span className="nav-link active" role="button" onClick={homeCliked} aria-current="page">Home</span>
+                                        <h6 className="nav-link active" role="button" onClick={homeCliked} aria-current="page">Home</h6>
                                     </li>
                                     <li className="nav-item">
-                                        <span className="nav-link" role="button" onClick={accountsClicked} >{userData.isAdmin ? ("Accounts") : (" ")}</span>
+                                        <h6 className="nav-link" role="button" onClick={accountsClicked} >{userData.isAdmin ? ("Accounts") : (" ")}</h6>
                                     </li>
-                                    <li className="nav-item pe-auto">
-                                        <span onClick={logout} role="button" className="nav-link">Logout</span>
+                                    <li className="nav-item dropdown">
+                                        <h6 className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {userData.name}
+                                        </h6>
+                                        <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><h6 onClick={logout} role="button" className="nav-link">Logout</h6></li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>
@@ -75,10 +80,10 @@ function Index() {
                     </nav>
                     {openAccounts ? (
                         <Account userData={userData} />
-                    ):(
+                    ) : (
                         <Content />
                     )}
-                    
+
                 </div>
             ) : (
                 "Page not Found"

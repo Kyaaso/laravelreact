@@ -19,12 +19,13 @@ class NewsController extends Controller
     public function category(Request $request){
         $newsapi = new NewsApi(self::api_key);
 
-        $news = $newsapi->getTopHeadLines($q=null, $sources=null, $country=null, $category=$request->category, $page_size=null, $page=null);
+        $news = $newsapi->getTopHeadLines($q=null, $sources=null, $country='ph', $category=$request->category, $page_size=null, $page=null);
         return $news;
     }
 
     public function search(Request $request){
         $newsapi = new NewsApi(self::api_key);
+
         try{
             $news = $newsapi->getEverything($q=$request->search, $sources=null, $domains=null, $exclude_domains=null, $from=null, $to=null, $language='en', $sort_by=null,  $page_size=null, $page=null);
         }catch(Exception){
