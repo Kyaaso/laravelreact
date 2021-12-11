@@ -59,8 +59,8 @@ const Content = () => {
                             </div>
                         </div>
                         <div className="row mb-5 pb-5 bg-white">
-                            {/* THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT */}
-                            {
+                            THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT
+                            {/* {
                                 data.map((item) => (
                                     <div className="col d-flex justify-content-center pt-2 border-bottom" key={id++}>
                                         <div className="card -0 p-1 mb-2" style={{ width: '18rem' }}>
@@ -75,7 +75,7 @@ const Content = () => {
                                         </div>
                                     </div>
                                 ))
-                            }
+                            } */}
                         </div>
                     </div>
                 </div>
