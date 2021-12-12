@@ -8,11 +8,13 @@ function Index() {
     const [isLogged, setIsLogged] = useState(false);
     const [openAccounts, setOpenAccounts] = useState(false);
     const [userData, setUserData] = useState();
+
     const location = useLocation();
     let navigate = useNavigate();
 
     const logout = async (ev) => {
         ev.preventDefault();
+        console.log(userData);
         Swal.fire(
             'Logging out!',
             'Thank you for visiting us',
@@ -37,12 +39,11 @@ function Index() {
     useEffect(() => {
         const loadUser = async () => {
             try {
+                console.log(location);
                 if (location.state !== null) {
-                    setUserData(location.state.response.data);
-                    console.log(userData);
+                    setUserData(location.state.response);
                     setIsLogged(true);
                 }
-
             } catch (e) {
                 console.log(e);
             }
@@ -65,11 +66,11 @@ function Index() {
                                         <h6 className="nav-link active" role="button" onClick={homeCliked} aria-current="page">Home</h6>
                                     </li>
                                     <li className="nav-item">
-                                        <h6 className="nav-link" role="button" onClick={accountsClicked} >{userData.isAdmin ? ("Accounts") : (" ")}</h6>
+                                        <h6 className="nav-link" role="button" onClick={accountsClicked} >{userData.data.isAdmin ? ("Accounts") : (" ")}</h6>
                                     </li>
                                     <li className="nav-item dropdown">
                                         <h6 className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {userData.name}
+                                            {userData.data.name}
                                         </h6>
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <li><h6 onClick={logout} role="button" className="nav-link">Logout</h6></li>
@@ -82,7 +83,7 @@ function Index() {
                     {openAccounts ? (
                         <Account userData={userData} />
                     ) : (
-                        <Content />
+                        <Content userData={userData} />
                     )}
 
                 </div>

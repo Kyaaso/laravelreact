@@ -9,6 +9,7 @@ function Login(props) {
     const [password, setPassword] = useState('');
     const [invalidCred, setInvalidCred] = useState('');
     const [errorList, setErrorList] = useState([]);
+    const [userData, setUserData] = useState();
     let navigate = useNavigate();
 
     const userLogin = async (ev) => {
@@ -19,12 +20,16 @@ function Login(props) {
         });
         const response = await axios.post('http://127.0.0.1:8000/api/login', request);
         if(response.data.status === 200){
+            var userData = response.data
+            //setUserData(tmpUserData);
+            console.log("2 ", response.data);
+            console.log("1 ", userData);
             Swal.fire(
                 'Success',
                 response.data.message,
                 'success'
               );
-            navigate('/index', {state: { response: response.data}});
+            navigate('/index', {state: { response: userData}});
         }else if(response.data.status === 422){
             setErrorList(response.data.message);
         }else if(response.data.status === 401){
