@@ -40,8 +40,60 @@ class UserController extends Controller
         }
     }
 
-    public function update(){
+    public function update(Request $request, $id){
+        $user = User::find($id);
+
+        if($request->email == $user->email){
+            $validator = Validator::make($request->all(),[
+                'name' => 'required|max:255',
+            ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'validate_err' => $validator->messages(),
+                ]);
+            }else{
+                User::where('id', $id)->update([
+                    'name' => $request->name,
+                    'isAdmin' => $request->isAdmin,
+                ]);
+            }
+        }else{
+            $validator = Validator::make($request->all(),[
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255|unique:users,email',
+            ]);
+            if($validator->fails()){
+                return response()->json([
+                    'validate_err' => $validator->messages(),
+                ]);
+            }else{
+                User::where('id', $id)->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'isAdmin' => $request->isAdmin,
+                ]);
+            }
+        }
         
+        return response()->json([
+            'status'=>200,
+            'message' => 'User Updated Sucessfully']);
+    }
+
+    public function search($id){
+        $user = User::find($id);
+        if($user){
+            return response()->json([
+                'status' => 200,
+                'message' => $user,
+            ]);
+        }else{
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found!',
+            ]);
+        }
     }
 
     public function destroy($id){

@@ -16,10 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/accounts', [UserController::class, 'index']);
 Route::post('/create-account', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
+Route::get('/accounts/search/{id}', [UserController::class, 'search']);
+Route::patch('/accounts/update/{id}', [UserController::class, 'update']);
+Route::get('/accounts', [UserController::class, 'index']);
 
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/category/{category}', [NewsController::class, 'category']);

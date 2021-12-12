@@ -39,6 +39,7 @@ function Index() {
             try {
                 if (location.state !== null) {
                     setUserData(location.state.response.data);
+                    console.log(userData);
                     setIsLogged(true);
                 }
 
