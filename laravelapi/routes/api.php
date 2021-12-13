@@ -25,8 +25,10 @@ Route::get('/news/search/{search}', [NewsController::class, 'search']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
-    Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
-    Route::get('/accounts/search/{id}', [UserController::class, 'search']);
-    Route::patch('/accounts/update/{id}', [UserController::class, 'update']);
-    Route::get('/accounts', [UserController::class, 'index']);
+    Route::middleware(['is_admin'])->group(function (){
+        Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
+        Route::get('/accounts/search/{id}', [UserController::class, 'search']);
+        Route::patch('/accounts/update/{id}', [UserController::class, 'update']);
+        Route::get('/accounts', [UserController::class, 'index']);
+    });
 });
