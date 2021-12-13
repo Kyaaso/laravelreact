@@ -1,7 +1,10 @@
 /* index search bar */
 .height { height: 10vh; }
 
-.form { position: relative }
+.form { 
+    position: relative;
+    opacity: 0.9; 
+}
 
 .form .fa-search {
     position: absolute;
@@ -36,3 +39,11 @@
     box-shadow: 1;
     border: 1
 }
+
+.bg-img {
+    background-image: url('./images/11b6769c8f2ea91b25fa0bb10bcaf4ab.jpg');
+    opacity: 0.9;
+}
+
+.category-container{ opacity: 0.9; }
+
