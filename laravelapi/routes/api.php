@@ -18,15 +18,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/create-account', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
-Route::get('/accounts/search/{id}', [UserController::class, 'search']);
-Route::patch('/accounts/update/{id}', [UserController::class, 'update']);
-Route::get('/accounts', [UserController::class, 'index']);
 
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/category/{category}', [NewsController::class, 'category']);
 Route::get('/news/search/{search}', [NewsController::class, 'search']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
+    Route::get('/accounts/search/{id}', [UserController::class, 'search']);
+    Route::patch('/accounts/update/{id}', [UserController::class, 'update']);
+    Route::get('/accounts', [UserController::class, 'index']);
 });

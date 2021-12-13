@@ -7,12 +7,7 @@ const Update = () => {
   const { id } = useParams();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userData, setUserData] = useState();
-  const [authUser, setAuthUser] = useState({
-    isAdmin: false,
-    isLogged: false,
-  });
+  const [isAdmin, setIsAdmin] = useState();
   const [errorList, setErrorList] = useState([]);
 
   let location = useLocation();
@@ -20,6 +15,7 @@ const Update = () => {
   const isAdminCheck = (ev) => {
     const value = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value;
     setIsAdmin(value);
+    console.log(isAdmin);
   }
 
   const updateAccount = async (ev) => {
@@ -32,10 +28,8 @@ const Update = () => {
       isAdmin: isAdmin
     });
 
-    console.log(request);
     document.getElementById('updateBtn').disabled = true;
     const response = await axios.patch(`http://127.0.0.1:8000/api/accounts/update/${id}`, request);
-    console.log(response.data);
     if (response.data.status === 200) {
       document.getElementById('updateBtn').disabled = false;
       Swal.fire(
@@ -44,8 +38,8 @@ const Update = () => {
         'success'
       );
     } else {
-      console.log(response.data.validate_err);
       setErrorList(response.data.validate_err);
+      console.log(errorList);
       document.getElementById('updateBtn').disabled = false;
     }
   }
@@ -53,15 +47,6 @@ const Update = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log(location);
-        if (location.state !== null) {
-          setUserData(location.state.response);
-          setAuthUser({
-            isAdmin: location.state.response.data.isAdmin,
-            isLogged: location.state.response.isLogged,
-          });
-          console.log(userData);
-        }
         const response = await axios.get(`http://127.0.0.1:8000/api/accounts/search/${id}`);
         const data = response.data.message;
         if (response.data.status === 200) {
@@ -72,7 +57,6 @@ const Update = () => {
           } else {
             setIsAdmin(true);
           }
-          console.log(isAdmin);
         } else if (response.data.status === 404) {
           Swal.fire(
             'Warning',
@@ -89,7 +73,7 @@ const Update = () => {
 
   return (
     <div>
-      {authUser.isAdmin && authUser.isLogged ? (
+      {localStorage.getItem('auth_token') && location.state.response.isAdmin === 1 ? (
         <div className="container mt-2">
           <div className="d-flex justify-content-center col-12 py-5">
             <div className="col-md-5 rounded-3 bg-white">
@@ -100,12 +84,12 @@ const Update = () => {
                 <div className="mb-3">
                   <label htmlFor="exampleInputEmail1" className="form-label">Fullname</label>
                   <input id="exampleInputEmail1" type="input" name="name" className="form-control" onInput={ev => setName(ev.target.value)} value={name} aria-describedby="emailHelp" />
-                  <span className="text-danger"></span>
+                  <span className="text-danger">{errorList.name}</span>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                   <input type="email" name="email" className="form-control" id="exampleInputEmail1" onInput={ev => setEmail(ev.target.value)} value={email} aria-describedby="emailHelp" />
-                  <span className="text-danger"></span>
+                  <span className="text-danger">{errorList.email}</span>
                 </div>
                 <div className="mb-3">
                   <div className="form-check">
@@ -120,7 +104,7 @@ const Update = () => {
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label>Are you done? <Link className="form-check-label fs-6" to={'/index'} state={{ response: userData }}>Here!</Link></label>
+                  <label>Are you done? <Link className="form-check-label fs-6" to={'/index'} state={{ response: location.state.response }}>Here!</Link></label>
                 </div>
                 <div className="mb-3 d-flex justify-content-center ">
                   <button type="submit" id="updateBtn" className="btn btn-primary w-75">Update</button>

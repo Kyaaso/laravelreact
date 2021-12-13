@@ -37,10 +37,12 @@ const Account = (props) => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                setIsLogged(props.userData.isLogged);
-                setIsAdmin(props.userData.data.isAdmin);
-                const response = await axios.get('http://127.0.0.1:8000/api/accounts');
-                setData(response.data);
+                if(localStorage.getItem('auth_token')){
+                    setIsLogged(true);
+                    setIsAdmin(props.userData.isAdmin);
+                    const response = await axios.get('http://127.0.0.1:8000/api/accounts');
+                    setData(response.data);
+                }
             } catch (e) {
                 console.log(e);
             }

@@ -1,27 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Content from './Content.js';
 import Account from './Account.js'
+import axios from 'axios';
 
 function Index() {
-    const [isLogged, setIsLogged] = useState(false);
     const [openAccounts, setOpenAccounts] = useState(false);
-    const [userData, setUserData] = useState();
-
+    const [isAdmin, setIsAdmin] = useState();
     const location = useLocation();
     let navigate = useNavigate();
 
+
+    function auth() {
+        if (localStorage.getItem('auth_token')) {
+            console.log("LOCATION",location.state.response);
+            setIsAdmin(location.state.response.isAdmin);
+        }
+    }
+
     const logout = async (ev) => {
         ev.preventDefault();
-        console.log(userData);
-        Swal.fire(
-            'Logging out!',
-            'Thank you for visiting us',
-            'success'
-        )
-        setIsLogged(false);
-        navigate('/');
+
+        axios.post(`/api/logout`).then(response => {
+            localStorage.removeItem('auth_name');
+            localStorage.removeItem('auth_email');
+            localStorage.removeItem('auth_token');
+            Swal.fire(
+                'Logging out!',
+                response.data.message,
+                'success'
+            )
+            navigate('/');
+        })
+
     }
 
     const homeCliked = async (ev) => {
@@ -39,11 +51,7 @@ function Index() {
     useEffect(() => {
         const loadUser = async () => {
             try {
-                console.log(location);
-                if (location.state !== null) {
-                    setUserData(location.state.response);
-                    setIsLogged(true);
-                }
+                auth();
             } catch (e) {
                 console.log(e);
             }
@@ -53,7 +61,7 @@ function Index() {
 
     return (
         <div>
-            {isLogged ? (
+            {localStorage.getItem('auth_token') ? (
                 <div>
                     <nav className="sticky-top navbar navbar-expand-lg navbar-light bg-white">
                         <div className="container">
@@ -66,11 +74,11 @@ function Index() {
                                         <h6 className="nav-link active" role="button" onClick={homeCliked} aria-current="page">Home</h6>
                                     </li>
                                     <li className="nav-item">
-                                        <h6 className="nav-link" role="button" onClick={accountsClicked} >{userData.data.isAdmin ? ("Accounts") : (" ")}</h6>
+                                        <h6 className="nav-link" role="button" onClick={accountsClicked} >{isAdmin ? ("Accounts") : (" ")}</h6>
                                     </li>
                                     <li className="nav-item dropdown">
                                         <h6 className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {userData.data.name}
+                                            {location.state.response.name}
                                         </h6>
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <li><h6 onClick={logout} role="button" className="nav-link">Logout</h6></li>
@@ -81,9 +89,9 @@ function Index() {
                         </div>
                     </nav>
                     {openAccounts ? (
-                        <Account userData={userData} />
+                        <Account userData={location.state.response} />
                     ) : (
-                        <Content userData={userData} />
+                        <Content userData={location.state.response} />
                     )}
 
                 </div>

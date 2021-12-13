@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import background from "../images/11b6769c8f2ea91b25fa0bb10bcaf4ab.jpg"
 import axios from 'axios';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const Content = () => {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("");
     var tempSearch = "";
     var id = 0;
     let timerInterval;
@@ -82,14 +80,14 @@ const Content = () => {
             <div className="row">
                 <div className="col-12">
                     <div className="container">
-                        <div className="row mb-2 mt-2 p-5 rounded" style={{ backgroundImage: `url(${background})` }}>
-                            <div className=" height d-flex justify-content-center align-items-center p-5 mt-5 mb-4">
+                        <div className="row mb-2 mt-2 p-5 rounded bg-img">
+                            <div className=" height d-flex justify-content-center align-items-center p-5 mt-5 mb-5">
                                 <div className="col">
                                     <div className="form">
                                         <i className="fa fa-search"></i>
                                         <input type="text" className="form-control form-input" name="search" id="searchBar" onKeyDown={(ev) => enterKeyIsPressed(ev, search)} onInput={onInputChanged} placeholder="Search anything..." />
                                     </div>
-                                    <div className="col d-flex justify-content-center align-items-center mt-4 bg-white pt-3 rounded-top">
+                                    <div className="col d-flex justify-content-center align-items-center mt-4 bg-white pt-3 rounded-top category-container">
                                         <ul className="list-inline">
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "business")}>Business</h6></li>
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "entertainment")}>Enterntainment</h6></li>
@@ -97,7 +95,7 @@ const Content = () => {
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "health")}>Health</h6></li>
                                         </ul>
                                     </div>
-                                    <div className="col d-flex justify-content-center align-items-center bg-white rounded-bottom">
+                                    <div className="col d-flex justify-content-center align-items-center bg-white rounded-bottom category-container">
                                         <ul className="list-inline">
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "science")}>Science</h6></li>
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "sports")}>Sports</h6></li>
@@ -108,7 +106,6 @@ const Content = () => {
                             </div>
                         </div>
                         <div className="row mb-5 pb-5 bg-white">
-                            {/* THIS IS THE CONTENT AREA (DISABLED KAY BASIG MAHUROT ANG FREE REQUEST PER DAY) DO NOT FOR TO UNCOMMENT */}
                             {
                                 data.map((item) => (
                                     <div className="col d-flex justify-content-center pt-2 border-bottom" key={id++}>

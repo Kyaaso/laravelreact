@@ -9,7 +9,6 @@ function Login(props) {
     const [password, setPassword] = useState('');
     const [invalidCred, setInvalidCred] = useState('');
     const [errorList, setErrorList] = useState([]);
-    const [userData, setUserData] = useState();
     let navigate = useNavigate();
 
     const userLogin = async (ev) => {
@@ -19,28 +18,28 @@ function Login(props) {
             password: password,
         });
         const response = await axios.post('http://127.0.0.1:8000/api/login', request);
-        if(response.data.status === 200){
+        if (response.data.status === 200) {
             var userData = response.data
-            //setUserData(tmpUserData);
-            console.log("2 ", response.data);
-            console.log("1 ", userData);
+            localStorage.setItem('auth_name', userData.data.name);
+            localStorage.setItem('auth_token', userData.token);
+            localStorage.setItem('auth_email', userData.data.email);
             Swal.fire(
                 'Success',
                 response.data.message,
                 'success'
-              );
-            navigate('/index', {state: { response: userData}});
-        }else if(response.data.status === 422){
+            );
+            navigate('/index', { state: { response: userData.data } });
+        } else if (response.data.status === 422) {
             setErrorList(response.data.message);
-        }else if(response.data.status === 401){
+        } else if (response.data.status === 401) {
             Swal.fire(
                 'Oh no!',
                 response.data.message,
                 'warning'
-              )
+            )
             setInvalidCred(response.data.message);
         }
-    } 
+    }
     return (
         <div className="d-flex justify-content-center col-12 py-5">
             <div className="col-md-3 p-5 bg-white rounded-3">

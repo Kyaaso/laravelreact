@@ -9,11 +9,11 @@ function Login() {
     const [password, setPassword] = useState('');
     const [password_confirmation, setPasswordConfirmation] = useState('');
     const [errorList, setErrorList] = useState([]);
-    let navigate = useNavigate ();
+    let navigate = useNavigate();
 
-    const createAccount = async (ev) => {
+    const createAccount = (ev) => {
         ev.preventDefault();
-        
+
         document.getElementById('createBtn').disabled = true;
         const request = ({
             name: name,
@@ -23,23 +23,27 @@ function Login() {
         });
 
         console.log(request);
+        axios.get(`/sanctum/csrf-cookie`).then(response => {
+            axios.post(`/api/create-account`, request).then(response => {
+                if (response.data.status === 200) {
+                    document.getElementById('createBtn').disabled = false;
+                    var userData = response.data.data;
+                    localStorage.setItem('auth_name', response.data.data.name);
+                    localStorage.setItem('auth_token', response.data.token);
+                    localStorage.setItem('auth_email', response.data.data.email);
+                    Swal.fire(
+                        'Success',
+                        response.data.message,
+                        'success'
+                    );
+                    navigate('/index', { state: { response: userData } });
+                } else {
+                    setErrorList(response.data.validate_err);
+                    document.getElementById('createBtn').disabled = false;
+                }
+            });
+        });
 
-        const response = await axios.post('http://127.0.0.1:8000/api/create-account', request);
-      
-        if(response.data.status === 200){
-            document.getElementById('createBtn').disabled = false;
-            console.log(response.data.message);
-            Swal.fire(
-                'Success',
-                response.data.message,
-                'success'
-              );
-            navigate("/");
-        }else{
-            console.log(response.data.validate_err);
-            setErrorList(response.data.validate_err);
-            document.getElementById('createBtn').disabled = false;
-        }
     }
 
     return (
@@ -47,7 +51,7 @@ function Login() {
             <div className="col-md-3 bg-white rounded-3">
                 <form onSubmit={createAccount} className=" m-5">
                     <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1"  className="form-label">Fullname</label>
+                        <label htmlFor="exampleInputEmail1" className="form-label">Fullname</label>
                         <input id="exampleInputEmail1" type="input" name="name" onInput={ev => setName(ev.target.value)} value={name} className="form-control" aria-describedby="emailHelp" />
                         <span className="text-danger">{errorList.name}</span>
                     </div>

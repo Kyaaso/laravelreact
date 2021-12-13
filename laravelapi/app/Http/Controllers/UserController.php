@@ -15,26 +15,34 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $isAdmin = false;
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|confirmed|min:6',
         ]);
-
+        if(sizeof(User::all()) == 0){
+            $isAdmin = true;
+        }
         if ($validator->fails()) {
             return response()->json([
                 'validate_err' => $validator->messages(),
             ]);
         } else {
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'isAdmin' =>  False,
+                'isAdmin' =>  $isAdmin,
             ]);
+
+            $token = $user->createToken($request->email.'_Token')->plainTextToken;
 
             return response()->json([
                 'status' => 200,
+                'token' => $token,
+                'isLogged' => true, 
+                'data' => $user,
                 'message' => 'Account Successfully Created',
             ]);
         }
@@ -42,12 +50,13 @@ class UserController extends Controller
 
     public function update(Request $request, $id){
         $user = User::find($id);
-
-        if($request->email == $user->email){
+        if(auth()->user()->isAdmin){
+            return "hek";
+        }
+        if($user->email == $request->email){
             $validator = Validator::make($request->all(),[
                 'name' => 'required|max:255',
             ]);
-
             if($validator->fails()){
                 return response()->json([
                     'validate_err' => $validator->messages(),
@@ -75,7 +84,7 @@ class UserController extends Controller
                 ]);
             }
         }
-        
+
         return response()->json([
             'status'=>200,
             'message' => 'User Updated Sucessfully']);
@@ -117,18 +126,30 @@ class UserController extends Controller
                 'message' => $validator->messages(),
             ]);
         }
+        
         if (!auth()->attempt($request->only('email', 'password'), $request->remember_me)) {
             return response()->json([
                 'status' => 401,
                 'message' => 'Invalid login details',
             ]);
         } else {
+            $user = User::find(auth()->user()->id);
+            $token = $user->createToken($request->email.'_Token')->plainTextToken;
             return response()->json([
                 'status' => 200,
                 'message' => 'Logged In',
                 'isLogged' => true, 
-                'data' => auth()->user(),
+                'data' => $user,
+                'token' => $token,
             ]);
         }
+    }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Logged Out Sucessfully',
+        ]);
     }
 }
