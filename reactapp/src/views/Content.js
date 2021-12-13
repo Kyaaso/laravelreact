@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -7,12 +8,26 @@ const Content = () => {
     const [search, setSearch] = useState("");
     var tempSearch = "";
     var id = 0;
+    let navigate = useNavigate();
     let timerInterval;
 
-    /*
-    * To give a little for news to be load.
-    */
-    function loadingBox(){
+    const articleClicked = (ev, urlToImage, title, description, content, author, publishedAt, url, source) => {
+        ev.preventDefault();
+        const article = {
+            urlToImage: urlToImage,
+            title: title,
+            description: description,
+            content: content,
+            author: author,
+            publishedAt: publishedAt,
+            url: url,
+            source: source,
+            isLogged: true,
+        }
+        navigate('/article', { state: { response: article } });
+    }
+
+    function loadingBox() {
         Swal.fire({
             title: 'Processing!',
             html: 'The articles are now being processed.',
@@ -37,7 +52,7 @@ const Content = () => {
         loadingBox();
         const response = await axios.get(`http://127.0.0.1:8000/api/news/category/${category}`);
         setData(response.data.articles);
-        
+
     }
 
     const enterKeyIsPressed = async (ev, search) => {
@@ -80,14 +95,14 @@ const Content = () => {
             <div className="row">
                 <div className="col-12">
                     <div className="container">
-                        <div className="row mb-2 mt-2 p-5 rounded bg-img">
+                        <div className="row mb-2 mt-2 p-5 rounded bg-img shadow">
                             <div className=" height d-flex justify-content-center align-items-center p-5 mt-5 mb-5">
                                 <div className="col">
-                                    <div className="form">
+                                    <div className="form shadow-lg">
                                         <i className="fa fa-search"></i>
                                         <input type="text" className="form-control form-input" name="search" id="searchBar" onKeyDown={(ev) => enterKeyIsPressed(ev, search)} onInput={onInputChanged} placeholder="Search anything..." />
                                     </div>
-                                    <div className="col d-flex justify-content-center align-items-center mt-4 bg-white pt-3 rounded-top category-container">
+                                    <div className="col d-flex justify-content-center align-items-center mt-4 bg-white pt-3 rounded-top category-container shadow">
                                         <ul className="list-inline">
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "business")}>Business</h6></li>
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "entertainment")}>Enterntainment</h6></li>
@@ -95,7 +110,7 @@ const Content = () => {
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "health")}>Health</h6></li>
                                         </ul>
                                     </div>
-                                    <div className="col d-flex justify-content-center align-items-center bg-white rounded-bottom category-container">
+                                    <div className="col d-flex justify-content-center align-items-center bg-white rounded-bottom category-container shadow">
                                         <ul className="list-inline">
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "science")}>Science</h6></li>
                                             <li className="list-inline-item"><h6 className="me-4" role="button" name="category" onClick={(ev) => categoryClicked(ev, "sports")}>Sports</h6></li>
@@ -108,8 +123,18 @@ const Content = () => {
                         <div className="row mb-5 pb-5 bg-white">
                             {
                                 data.map((item) => (
-                                    <div className="col d-flex justify-content-center pt-2 border-bottom" key={id++}>
-                                        <div className="card -0 p-1 mb-2" style={{ width: '18rem' }}>
+                                    <div className="col d-flex justify-content-center pt-2 border-bottom " key={id++}
+                                        onClick={(ev) => articleClicked(ev,
+                                            item.urlToImage,
+                                            item.title,
+                                            item.description,
+                                            item.content,
+                                            item.author,
+                                            item.publishedAt,
+                                            item.url,
+                                            item.source.name
+                                        )}>
+                                        <div className="card -0 p-1 mb-2 article-container shadow" role="button" style={{ width: '18rem' }}>
                                             <img className="card-img-top -bottom pb-1" style={{ width: '100%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={item.urlToImage} alt="" />
                                             <div className="card-body">
                                                 <h5 className="card-title"><u>{item.title}</u></h5>

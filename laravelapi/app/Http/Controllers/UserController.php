@@ -50,9 +50,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id){
         $user = User::find($id);
-        if(auth()->user()->isAdmin){
-            return "hek";
-        }
+        
         if($user->email == $request->email){
             $validator = Validator::make($request->all(),[
                 'name' => 'required|max:255',

@@ -14,7 +14,6 @@ function Index() {
 
     function auth() {
         if (localStorage.getItem('auth_token')) {
-            console.log("LOCATION",location.state.response);
             setIsAdmin(location.state.response.isAdmin);
         }
     }
@@ -63,7 +62,7 @@ function Index() {
         <div>
             {localStorage.getItem('auth_token') ? (
                 <div>
-                    <nav className="sticky-top navbar navbar-expand-lg navbar-light bg-white">
+                    <nav className="sticky-top navbar navbar-expand-lg navbar-light bg-white shadow-sm">
                         <div className="container">
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                                 <span className="navbar-toggler-icon"></span>
@@ -76,7 +75,11 @@ function Index() {
                                     <li className="nav-item">
                                         <h6 className="nav-link" role="button" onClick={accountsClicked} >{isAdmin ? ("Accounts") : (" ")}</h6>
                                     </li>
-                                    <li className="nav-item dropdown">
+                                </ul>
+                            </div>
+                            <div>
+                                <ul className="navbar-nav dropdown">
+                                    <li className="nav-item">
                                         <h6 className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             {location.state.response.name}
                                         </h6>

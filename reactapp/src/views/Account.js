@@ -31,13 +31,13 @@ const Account = (props) => {
         setIsAdmin(false);
         setIsLogged(false);
 
-        navigate(`/update-account/${id}`,  { state: { response: props.userData } });
+        navigate(`/update-account/${id}`, { state: { response: props.userData } });
     }
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                if(localStorage.getItem('auth_token')){
+                if (localStorage.getItem('auth_token')) {
                     setIsLogged(true);
                     setIsAdmin(props.userData.isAdmin);
                     const response = await axios.get('http://127.0.0.1:8000/api/accounts');
