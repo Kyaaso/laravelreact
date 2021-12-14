@@ -91,6 +91,7 @@ const Content = () => {
 
 
     return (
+
         <div className="container mt-2">
             <div className="row">
                 <div className="col-12">
@@ -132,7 +133,7 @@ const Content = () => {
                                             item.author,
                                             item.publishedAt,
                                             item.url,
-                                            item.source.name
+                                            item.source.name,
                                         )}>
                                         <div className="card -0 p-1 mb-2 article-container shadow" role="button" style={{ width: '18rem' }}>
                                             <img className="card-img-top -bottom pb-1" style={{ width: '100%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={item.urlToImage} alt="" />

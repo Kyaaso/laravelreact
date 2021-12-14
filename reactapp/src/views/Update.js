@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
+import NotFound from './NotFound';
 
 const Update = () => {
   const { id } = useParams();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userAdmin, setUserAdmin] = useState();
   const [errorList, setErrorList] = useState([]);
+  const [token, setToken] = useState("");
 
   let location = useLocation();
 
-  const isAdminCheck = (ev) => {
+  const userAdminCheck = (ev) => {
     const value = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value;
-    setIsAdmin(value);
-    console.log(isAdmin);
+    setUserAdmin(value);
   }
 
   const updateAccount = async (ev) => {
@@ -25,7 +27,7 @@ const Update = () => {
       id: id,
       name: name,
       email: email,
-      isAdmin: isAdmin
+      isAdmin: userAdmin
     });
 
     document.getElementById('updateBtn').disabled = true;
@@ -47,15 +49,18 @@ const Update = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        setIsAdmin(location.state.response.isAdmin);
+        setToken(location.state.response.token);
+        console.log("UUPPDAATTEEE", location.state);
         const response = await axios.get(`http://127.0.0.1:8000/api/accounts/search/${id}`);
         const data = response.data.message;
         if (response.data.status === 200) {
           setName(data.name);
           setEmail(data.email);
           if (data.isAdmin === 0) {
-            setIsAdmin(false);
+            setUserAdmin(false);
           } else {
-            setIsAdmin(true);
+            setUserAdmin(true);
           }
         } else if (response.data.status === 404) {
           Swal.fire(
@@ -73,7 +78,7 @@ const Update = () => {
 
   return (
     <div>
-      {localStorage.getItem('auth_token') && location.state.response.isAdmin === 1 ? (
+      {localStorage.getItem('auth_token') === token && isAdmin? (
         <div className="container mt-2">
           <div className="d-flex justify-content-center col-12 py-5">
             <div className="col-md-5 rounded-3 bg-white">
@@ -94,9 +99,9 @@ const Update = () => {
                 <div className="mb-3">
                   <div className="form-check">
                     {isAdmin ? (
-                      <input className="form-check-input" type="checkbox" onChange={isAdminCheck} checked={isAdmin} id="flexCheckIndeterminate" />
+                      <input className="form-check-input" type="checkbox" onChange={userAdminCheck} checked={userAdmin} id="flexCheckIndeterminate" />
                     ) : (
-                      <input className="form-check-input" type="checkbox" onChange={isAdminCheck} id="flexCheckIndeterminate" />
+                      <input className="form-check-input" type="checkbox" onChange={userAdminCheck} id="flexCheckIndeterminate" />
                     )}
                     <label className="form-check-label" htmlFor="flexCheckIndeterminate">
                       Admin
@@ -104,7 +109,7 @@ const Update = () => {
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label>Are you done? <Link className="form-check-label fs-6" to={'/index'} state={{ response: location.state.response }}>Here!</Link></label>
+                  <label>Are you done? <Link className="form-check-label fs-6" to={'/index'} state={{ response: location.state.response, isLogged: true }}>Here!</Link></label>
                 </div>
                 <div className="mb-3 d-flex justify-content-center ">
                   <button type="submit" id="updateBtn" className="btn btn-primary w-75">Update</button>
@@ -114,7 +119,7 @@ const Update = () => {
           </div>
         </div>
       ) : (
-        <p>No permission</p>
+        <NotFound />
       )}
     </div>
   );

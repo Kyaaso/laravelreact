@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
+
+import NotFound from '../NotFound';
 
 function Login() {
     const [name, setName] = useState('');
@@ -10,6 +12,7 @@ function Login() {
     const [password_confirmation, setPasswordConfirmation] = useState('');
     const [errorList, setErrorList] = useState([]);
     let navigate = useNavigate();
+    let location = useLocation();
 
     const createAccount = (ev) => {
         ev.preventDefault();
@@ -47,36 +50,42 @@ function Login() {
     }
 
     return (
-        <div className="d-flex justify-content-center col-12 py-5">
-            <div className="col-md-3 bg-white rounded-3">
-                <form onSubmit={createAccount} className=" m-5">
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Fullname</label>
-                        <input id="exampleInputEmail1" type="input" name="name" onInput={ev => setName(ev.target.value)} value={name} className="form-control" aria-describedby="emailHelp" />
-                        <span className="text-danger">{errorList.name}</span>
+        <div>
+            {!localStorage.getItem('auth_token') && location.state === null ? (
+                <div className="d-flex justify-content-center col-12 py-5">
+                    <div className="col-md-3 bg-white rounded-3">
+                        <form onSubmit={createAccount} className=" m-5">
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputEmail1" className="form-label">Fullname</label>
+                                <input id="exampleInputEmail1" type="input" name="name" onInput={ev => setName(ev.target.value)} value={name} className="form-control" aria-describedby="emailHelp" />
+                                <span className="text-danger">{errorList.name}</span>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+                                <input type="email" name="email" onInput={ev => setEmail(ev.target.value)} value={email} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                                <span className="text-danger">{errorList.email}</span>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputEmail1" className="form-label">Password</label>
+                                <input id="exampleInputEmail1" type="password" name="password" onInput={ev => setPassword(ev.target.value)} value={password} className="form-control" />
+                                <span className="text-danger">{errorList.password}</span>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputEmail1" className="form-label">Repeat Password</label>
+                                <input id="exampleInputEmail1" type="password" name="password_confirmation" onInput={ev => setPasswordConfirmation(ev.target.value)} value={password_confirmation} className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label>Already have an account? <Link className="form-check-label fs-6" to={'/'}>Here!</Link></label>
+                            </div>
+                            <div className="mb-3 d-flex justify-content-center ">
+                                <button type="submit" id="createBtn" className="btn btn-primary w-75">Register</button>
+                            </div>
+                        </form>
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                        <input type="email" name="email" onInput={ev => setEmail(ev.target.value)} value={email} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                        <span className="text-danger">{errorList.email}</span>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Password</label>
-                        <input id="exampleInputEmail1" type="password" name="password" onInput={ev => setPassword(ev.target.value)} value={password} className="form-control" />
-                        <span className="text-danger">{errorList.password}</span>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Repeat Password</label>
-                        <input id="exampleInputEmail1" type="password" name="password_confirmation" onInput={ev => setPasswordConfirmation(ev.target.value)} value={password_confirmation} className="form-control" />
-                    </div>
-                    <div className="mb-3">
-                        <label>Already have an account? <Link className="form-check-label fs-6" to={'/'}>Here!</Link></label>
-                    </div>
-                    <div className="mb-3 d-flex justify-content-center ">
-                        <button type="submit" id="createBtn" className="btn btn-primary w-75">Register</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            ) : (
+                <NotFound />
+            )}
         </div>
     );
 }

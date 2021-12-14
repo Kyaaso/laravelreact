@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { useLocation } from 'react-router-dom';
+import NotFound from './NotFound.js';
 
 const Article = () => {
+    const [isLogged, setIsLogged] = useState(false);
     const location = useLocation();
     const article = location.state;
 
     useEffect(() => {
         const fetchArticle = async () => {
+            if(localStorage.getItem('auth_token')){
+                setIsLogged(location.state.response.isLogged);
+            }
         };
         fetchArticle();
         return () => {
         };
     }, []);
     return (
-        <div className="container mt-2 py-5">
+        <div>
+            {localStorage.getItem('auth_token') && isLogged ? (
+                <div className="container mt-2 py-5">
             <div className="row">
                 <div className="col-12">
                     <div className="container">
@@ -34,7 +39,7 @@ const Article = () => {
                         <div className="row mb-2 p-3 d-flex justify-content-center">
                             <div className="row">
                                 <div className="col-12 d-flex justify-content-center">
-                                    <img className="" style={{ width: '55%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={article.response.urlToImage} alt="" />
+                                    <img className="" style={{ width: '60%', height: 'auto', objectFit: 'contain', objectPosition: '100% 0' }} src={article.response.urlToImage} alt="" />
                                 </div>
                             </div>
                             <div className="row d-flex justify-content-center">
@@ -57,6 +62,11 @@ const Article = () => {
                 </div>
             </div>
         </div>
+            ) : (
+                <NotFound />
+            )}
+        </div>
+        
     );
 }
 

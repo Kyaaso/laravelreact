@@ -2,21 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Content from './Content.js';
-import Account from './Account.js'
+import Account from './Account.js';
+import NotFound from './NotFound.js';
 import axios from 'axios';
 
 function Index() {
     const [openAccounts, setOpenAccounts] = useState(false);
     const [isAdmin, setIsAdmin] = useState();
+    const [name, setName] = useState("");
+    const [isLogged, setIsLogged] = useState(false);
+    const [response, setResponse] = useState({
+        created_at: "",
+        email: "",
+        email_verified: "",
+        id: 0,
+        isAdmin: 0,
+        name: "",
+        updated_At: "",
+        token: "",
+    })
     const location = useLocation();
     let navigate = useNavigate();
-
-
-    function auth() {
-        if (localStorage.getItem('auth_token')) {
-            setIsAdmin(location.state.response.isAdmin);
-        }
-    }
 
     const logout = async (ev) => {
         ev.preventDefault();
@@ -50,7 +56,23 @@ function Index() {
     useEffect(() => {
         const loadUser = async () => {
             try {
-                auth();
+                if (localStorage.getItem('auth_token')) {
+                    setIsAdmin(location.state.response.isAdmin);
+                    setName(location.state.response.name);
+                    setIsLogged(location.state.isLogged);
+                    setResponse({
+                        created_at: location.state.response.created_at,
+                        email: location.state.response.email,
+                        email_verified_at: location.state.response.email_verified_at,
+                        id: location.state.response.id,
+                        isAdmin: location.state.response.isAdmin,
+                        name: location.state.response.name,
+                        updated_At: location.state.response.updated_at,
+                        token: localStorage.getItem('auth_token'),
+                        isLogged: location.state.isLogged,
+                    });
+                    console.log("AAA",location);
+                }
             } catch (e) {
                 console.log(e);
             }
@@ -60,7 +82,7 @@ function Index() {
 
     return (
         <div>
-            {localStorage.getItem('auth_token') ? (
+            {localStorage.getItem('auth_token') && isLogged ? (
                 <div>
                     <nav className="sticky-top navbar navbar-expand-lg navbar-light bg-white shadow-sm">
                         <div className="container">
@@ -81,7 +103,7 @@ function Index() {
                                 <ul className="navbar-nav dropdown">
                                     <li className="nav-item">
                                         <h6 className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {location.state.response.name}
+                                            {name}
                                         </h6>
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <li><h6 onClick={logout} role="button" className="nav-link">Logout</h6></li>
@@ -92,14 +114,14 @@ function Index() {
                         </div>
                     </nav>
                     {openAccounts ? (
-                        <Account userData={location.state.response} />
+                        <Account userData={response} />
                     ) : (
-                        <Content userData={location.state.response} />
+                        <Content userData={response} />
                     )}
 
                 </div>
             ) : (
-                "Page not Found"
+                <NotFound />
             )}
 
         </div>
