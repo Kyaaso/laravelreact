@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use Exception;
 use jcobhams\NewsApi\NewsApi;
 use Illuminate\Http\Request;
+
+define("API_KEY", env('NEWSAPI_KEY'));
 class NewsController extends Controller
 {
-    const api_key = "ebbdc3a921fa44f39cde12eaa2b792cc";
-    
     public function index(){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
 
         $news = $newsapi->getTopHeadLines($q=null, $sources=null, $country='ph', $category=null, $page_size=null, $page=null);
         return $news;
     }
 
     public function category(Request $request){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
 
         $news = $newsapi->getTopHeadLines($q=null, $sources=null, $country='ph', $category=$request->category, $page_size=null, $page=null);
         return $news;
     }
 
     public function search(Request $request){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
 
         try{
             $news = $newsapi->getEverything($q=$request->search, $sources=null, $domains=null, $exclude_domains=null, $from=null, $to=null, $language='en', $sort_by=null,  $page_size=null, $page=null);
@@ -60,21 +60,21 @@ class NewsController extends Controller
     }
 
     public function getAllowedCategory(){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
         $categories = $newsapi->getCategories();
 
         return $categories;
     }
 
     public function getAllowedLanguage(){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
         $languages = $newsapi->getLanguages();
 
         return $languages;
     }
 
     public function getAllowedCountry(){
-        $newsapi = new NewsApi(self::api_key);
+        $newsapi = new NewsApi(API_KEY);
         $countries = $newsapi->getCountries();
 
         return $countries;
