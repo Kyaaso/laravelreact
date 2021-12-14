@@ -36,7 +36,7 @@ class NewsController extends Controller
                     $news = $newsapi->getEverything($q=null, $sources=null, $domains=null, $exclude_domains=null, $from=null, $to=null, $language=$request->search, $sort_by=null,  $page_size=null, $page=null);
                 }catch(Exception){
                     try{
-                        $news = $newsapi->getEverything($q=$request->search, $sources=null, $country=null, $category=null, $page_size=null, $page=null);
+                        $news = $newsapi->getTopHeadLines($q=$request->search, $sources=null, $country=null, $category=null, $page_size=null, $page=null);
                     }catch(Exception){
                         try{
                             $news = $newsapi->getTopHeadLines($q=null, $sources=$request->search, $country=null, $category=null, $page_size=null, $page=null);
