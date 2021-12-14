@@ -19,11 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/create-account', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 
-Route::get('/news', [NewsController::class, 'index']);
-Route::get('/news/category/{category}', [NewsController::class, 'category']);
-Route::get('/news/search/{search}', [NewsController::class, 'search']);
-
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/news', [NewsController::class, 'index']);
+    Route::get('/news/category/{category}', [NewsController::class, 'category']);
+    Route::get('/news/search/{search}', [NewsController::class, 'search']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::middleware(['is_admin'])->group(function (){
         Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
