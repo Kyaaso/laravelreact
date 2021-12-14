@@ -1,7 +1,9 @@
 # LARAVEL-REACT
 
-##### External API
-### NewsAPI
+### External API
+##### NewsAPI
 Note: Add your NewsAPI Key inside env. file (env. --> API_KEY)
 
-NewsAPI Docs: https://newsapi.org/docs
+This is my NewsAPI key: ebbdc3a921fa44f39cde12eaa2b792cc
+
+NewsAPI Docs: https://newsapi.org/docs  
