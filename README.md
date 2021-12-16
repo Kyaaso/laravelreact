@@ -1,14 +1,21 @@
 # LARAVEL-REACT
 
-To run the app:
 
-Open Terminal: cd laravelapi -> php artisan serve
+## To run the app:
+<p>Open Terminal: cd laravelapi -> php artisan serve</p>
 
-Open Terminal: cd reactapp -> npm start
+<p>Open Terminal: cd reactapp -> npm start </p>
 
-## NewsAPI
-Note: Add your NewsAPI Key inside env. file (env. --> API_KEY)
 
-This is my NewsAPI key: ebbdc3a921fa44f39cde12eaa2b792cc
+### MailTrap
+<p>I added MAIL FACADES and uses mailtrap for email stimulation.</p>
+<p>So, create your mailtrap at *https://mailtrap.io/*.</p>
+<p>And add your mailtrap credentials at .env file</p>
 
-NewsAPI Docs: https://newsapi.org/docs  
+
+### NewsAPI
+<p>Note: Add your NewsAPI Key inside .env file (.env --> API_KEY)</p>
+
+<p>This is my NewsAPI key: ebbdc3a921fa44f39cde12eaa2b792cc</p>
+
+<p>NewsAPI Docs: https://newsapi.org/docs  </p>
