@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserNotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/news/search/{search}', [NewsController::class, 'search']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::middleware(['is_admin'])->group(function (){
+        Route::post('/account-update-notify', [UserNotificationController::class, 'accountUpdate']);
         Route::post('/accounts/delete/{id}', [UserController::class, 'destroy']);
         Route::get('/accounts/search/{id}', [UserController::class, 'search']);
         Route::patch('/accounts/update/{id}', [UserController::class, 'update']);

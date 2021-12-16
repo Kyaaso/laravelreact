@@ -11,12 +11,15 @@ const Update = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userAdmin, setUserAdmin] = useState();
   const [errorList, setErrorList] = useState([]);
+  const [adminName, setAdminName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
   const [token, setToken] = useState("");
 
   let location = useLocation();
 
   const userAdminCheck = (ev) => {
     const value = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value;
+    console.log(value);
     setUserAdmin(value);
   }
 
@@ -27,13 +30,23 @@ const Update = () => {
       id: id,
       name: name,
       email: email,
-      isAdmin: userAdmin
+      isAdmin: userAdmin,
+    });
+    const adminDetails = ({
+      adminName: adminName,
+      adminEmail: adminEmail,
     });
 
     document.getElementById('updateBtn').disabled = true;
+    document.getElementById('updateBtn').innterText = "Updating";
     const response = await axios.patch(`http://127.0.0.1:8000/api/accounts/update/${id}`, request);
     if (response.data.status === 200) {
-      document.getElementById('updateBtn').disabled = false;
+      
+      const res = await axios.post(`http://127.0.0.1:8000/api/account-update-notify`, adminDetails);
+          if(res.data.status === 200) {
+            console.log(res.data.adminName);
+            console.log(res.data.adminEmail);
+          }
       Swal.fire(
         'Success',
         response.data.message,
@@ -42,16 +55,18 @@ const Update = () => {
     } else {
       setErrorList(response.data.validate_err);
       console.log(errorList);
-      document.getElementById('updateBtn').disabled = false;
     }
+    document.getElementById('updateBtn').innterText = "Update";
+    document.getElementById('updateBtn').disabled = false;
   }
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setIsAdmin(location.state.response.isAdmin);
+        setAdminName(location.state.response.name);
+        setAdminEmail(location.state.response.email);
         setToken(location.state.response.token);
-        console.log("UUPPDAATTEEE", location.state);
         const response = await axios.get(`http://127.0.0.1:8000/api/accounts/search/${id}`);
         const data = response.data.message;
         if (response.data.status === 200) {
