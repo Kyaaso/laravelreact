@@ -9,7 +9,7 @@
 
 ### MailTrap
 <p>I added MAIL FACADES and uses mailtrap for email stimulation.</p>
-<p>So, create your mailtrap at *https://mailtrap.io/*.</p>
+<p>You create your mailtrap at *https://mailtrap.io/*.</p>
 <p>And add your mailtrap credentials at .env file</p>
 
 
