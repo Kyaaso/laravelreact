@@ -6,7 +6,7 @@
 
 <p>Open Terminal: cd reactapp -> npm start </p>
 
-<p>Test</p>
+
 
 ### MailTrap
 <p>I added MAIL FACADES and uses mailtrap for email stimulation.</p>

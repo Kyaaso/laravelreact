@@ -82,7 +82,7 @@ function Index() {
 
     return (
         <div>
-            {localStorage.getItem('auth_token') && isLogged ? (
+            {localStorage.getItem('auth_token') ? (
                 <div>
                     <nav className="sticky-top navbar navbar-expand-lg navbar-light bg-white shadow-sm">
                         <div className="container">
